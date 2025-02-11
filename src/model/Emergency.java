@@ -7,13 +7,13 @@ public abstract class Emergency {
 
     private String type;
     private String location;
-    private int gravity;
+    private Gravity gravity;
     private int responseTime;
     private boolean status;
     private long initialAttentionTime;
     private long finalAttentionTime;
 
-    public Emergency(String type, String location, int gravity, int responseTime, boolean status,
+    public Emergency(String type, String location, Gravity gravity, int responseTime, boolean status,
             long initialAttentionTime, long finalAttentionTime) {
         this.type = type;
         this.location = location;
@@ -24,13 +24,13 @@ public abstract class Emergency {
         this.finalAttentionTime = finalAttentionTime;
     }
 
-    public Emergency(String type, String location, int gravity, int responseTime, boolean status) {
+    public Emergency(String type, String location, Gravity gravity, int responseTime, boolean status) {
 
         this(type, location, gravity, responseTime, status, responseTime, responseTime);
 
     }
 
-    public Emergency(String type, String location, int gravity, int responseTime) {
+    public Emergency(String type, String location, Gravity gravity, int responseTime) {
         this.type = type;
         this.location = location;
         this.gravity = gravity;
@@ -54,11 +54,11 @@ public abstract class Emergency {
         this.location = location;
     }
 
-    public int getGravity() {
+    public Gravity getGravity() {
         return gravity;
     }
 
-    public void setGravity(int gravity) {
+    public void setGravity(Gravity gravity) {
         this.gravity = gravity;
     }
 
