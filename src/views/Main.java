@@ -14,15 +14,35 @@ public class Main {
     public static void main(String[] args) throws Exception {
         
         EmergencySystem emergencySystem = EmergencySystem.getInstance();
+
+        initializeResources(emergencySystem);
+
+        Scanner sc = new Scanner(System.in);
         boolean menu = true;
 
 
+        while (menu) {
+            System.out.println("\n ----   SISTEMA DE GESTION DE EMERGENCIAS   ----");
+            System.out.println("1. Registrar emergencia");
+            System.out.println("2. Mostrar recursos");
+            System.out.println("3. Atender emergencia");
+            System.out.println("4. Ver estadisticas del dia");
+            System.out.println("5. Finalizar jornada");
+            System.out.println("Selecciona una opcion: ");
+            int option = Integer.parseInt(sc.nextLine());
 
+            switch (option) {
+
+                case 1 -> registerEmergencyFromMenu(emergencySystem, sc);
+
+
+            }
+        }
 
     }
 
 
-    public void initializeResources(EmergencySystem system){
+    private static void initializeResources(EmergencySystem system){
 
         system.registerResource(new Firefighters("Bomberos 1", 8, 200));
         system.registerResource(new Firefighters("Bomberos 2", 4, 170));
@@ -33,7 +53,7 @@ public class Main {
 
     }
 
-    public void registerEmergencyFromMenu(EmergencySystem system, Scanner sc){
+    private static void registerEmergencyFromMenu(EmergencySystem system, Scanner sc){
 
         System.out.println("\n--- REGISTRAR EMERGENCIA ---");
         System.out.println("1. Accidente");
@@ -88,5 +108,5 @@ public class Main {
     }
 
 
-    
+
 }

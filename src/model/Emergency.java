@@ -108,7 +108,7 @@ public abstract class Emergency {
     }
 
     public String getDescription(){
-        return String.format("%s en %s con gravedad %s",type,location, gravity);
+        return String.format("%s en %s con gravedad %s ",type,location, gravity);
     }
 
     public String toString(){
