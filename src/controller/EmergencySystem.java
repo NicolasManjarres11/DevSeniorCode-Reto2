@@ -11,9 +11,12 @@ import model.interfaces.IEmergencyService;
 import model.observer.ObserverEmergency;
 import model.observer.SubjectEmergency;
 import model.services.Ambulance;
+import model.services.Firefighters;
+import model.services.Police;
+import model.strategy.StrategyGravityPriority;
 import model.strategy.StrategyPriority;
 
-public class EmergencySystem implements SubjectEmergency{
+public class EmergencySystem implements SubjectEmergency {
 
     private static EmergencySystem instance;
     private List<Emergency> listEmergency;
@@ -27,7 +30,7 @@ public class EmergencySystem implements SubjectEmergency{
 
     private EmergencySystem() {
 
-        strategyPriority = new StrategyPriority();
+        strategyPriority = new StrategyGravityPriority();
         listEmergency = new ArrayList<>();
         listResources = new ArrayList<>();
         observers = new ArrayList<>();
@@ -37,9 +40,8 @@ public class EmergencySystem implements SubjectEmergency{
     }
 
     //Se instancia una vez el sistema de emergencias
-
-    public static EmergencySystem getInstance(){
-        if(instance == null){
+    public static EmergencySystem getInstance() {
+        if (instance == null) {
             instance = new EmergencySystem();
         }
 
@@ -63,59 +65,58 @@ public class EmergencySystem implements SubjectEmergency{
         }
     }
 
-    public void registerResource(IEmergencyService resource){
+    public void registerResource(IEmergencyService resource) {
         listResources.add(resource);
     }
 
-    public void showResourcesStatus(){
+    public void showResourcesStatus() {
         System.out.println("\n--- ESTADO ACTUAL DE LOS RECURSOS ---");
-        for(IEmergencyService resource : listResources){
+        for (IEmergencyService resource : listResources) {
             System.out.println(resource.toString());
         }
     }
 
     //Lambda
-
-    public List<IEmergencyService> filterAvailableResources(){
+    public List<IEmergencyService> filterAvailableResources() {
         return listResources.stream().filter(r -> r.isStatus()).collect(Collectors.toList());
     }
 
-    public void addEmergency(Emergency emergency){
+    public void addEmergency(Emergency emergency) {
         listEmergency.add(emergency);
         notifyObservers(emergency);
     }
 
-     public List<Emergency> getEmergencies(){
+    public List<Emergency> getEmergencies() {
         return listEmergency.stream().filter(e -> !e.isStatus()).collect(Collectors.toList());
-     }
+    }
 
-     public void assignResourcesToEmergency(Emergency emergency){
+    public void assignResourcesToEmergency(Emergency emergency) {
 
         List<IEmergencyService> available = filterAvailableResources();
 
-        if(available.isEmpty()){
+        if (available.isEmpty()) {
             System.out.println("No hay recursos disponibles para atender la emergencia");
             return;
         }
         System.out.println("\n--- ASIGNANDO RECURSOS ... ---");
 
-        if(emergency instanceof  Fire){
-            for (IEmergencyService r : available){
-                if (r instanceof Firefighters){
+        if (emergency instanceof Fire) {
+            for (IEmergencyService r : available) {
+                if (r instanceof Firefighters) {
                     r.attendEmergency(emergency);
                     break;
                 }
             }
-        } else if(emergency instanceof Accident){
-            for (IEmergencyService r : available){
-                if (r instanceof Ambulance){
+        } else if (emergency instanceof Accident) {
+            for (IEmergencyService r : available) {
+                if (r instanceof Ambulance) {
                     r.attendEmergency(emergency);
                     break;
                 }
             }
-        } else if (emergency instanceof Robbery){
-            for (IEmergencyService r : available){
-                if (r instanceof Police){
+        } else if (emergency instanceof Robbery) {
+            for (IEmergencyService r : available) {
+                if (r instanceof Police) {
                     r.attendEmergency(emergency);
                     break;
                 }
@@ -123,16 +124,65 @@ public class EmergencySystem implements SubjectEmergency{
 
         }
 
-        public void attendEmergency(Emergency emergency){
+    }
 
+    public void attendEmergency(Emergency emergency) {
+
+        if(emergency.isStatus()){
+            System.out.println("Esta emergencia ya ha sido atendida");
+            return;
         }
 
+        emergency.startAttention();
+
+        try {
+
+            Thread.sleep(1000);
+            
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        emergency.endAttention();
+
+        System.out.println("Emergencia atendida: "+emergency.getDescription());
+
+        emergenciesAttend += 1;
+        totalAttentionTime += emergency.getResponseTime();
+
+    }
 
 
-     }
+    public void showStatistics() {
+
+        System.out.println("\n--- ESTADISTICAS DEL DIA ---");
+        System.out.println("Emergencias atendidas: "+emergenciesAttend);
+
+        long mediaMs = 0;
+
+        if(emergenciesAttend > 0){
+            mediaMs = totalAttentionTime / emergenciesAttend;
+        }
+
+        double mediaSeg = mediaMs / 1000.0;
+
+        System.out.println("Tiempo promedio de atencion: "+mediaSeg+" segundos");
 
 
+        long noAttend = listEmergency.stream().filter(e -> !e.isStatus()).count();
 
+        System.out.println("Emergencias no atendidas: "+noAttend);
+    }
 
+    public void endDay() {
+        showStatistics();
+                System.out.println("Guardando registro del día (simulado)...");
+        // Lógica para guardarlo en BD o archivo
+        System.out.println("Sistema preparado para siguiente ciclo.");
+    }
+
+    public void setStrategyPriority(StrategyPriority newStrategy) {
+        this.strategyPriority = newStrategy;
+    }
 
 }

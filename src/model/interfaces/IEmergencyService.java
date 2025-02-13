@@ -1,5 +1,7 @@
 package model.interfaces;
 
+import model.Emergency;
+
 public interface IEmergencyService {
 
     String getId();
@@ -17,6 +19,8 @@ public interface IEmergencyService {
     void assignFuel(int amount);
 
     void releaseFuel(int amount);
+
+    void attendEmergency(Emergency emergency);
 
 
 
