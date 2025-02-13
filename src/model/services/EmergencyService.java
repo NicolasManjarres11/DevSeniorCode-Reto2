@@ -64,6 +64,7 @@ public abstract class EmergencyService implements IEmergencyService {
 
     
 
+    @Override
     public abstract void attendEmergency(Emergency emergency);
 
     @Override
