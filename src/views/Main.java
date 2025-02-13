@@ -34,6 +34,8 @@ public class Main {
             switch (option) {
 
                 case 1 -> registerEmergencyFromMenu(emergencySystem, sc);
+                case 2 -> emergencySystem.showResourcesStatus();
+                case 5 -> menu = false;
 
 
             }

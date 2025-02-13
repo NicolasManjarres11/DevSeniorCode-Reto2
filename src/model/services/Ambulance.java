@@ -6,7 +6,6 @@ public class Ambulance extends EmergencyService{
 
     public Ambulance(String id, int staff, int fuel) {
             super(id, staff, fuel);
-            //TODO Auto-generated constructor stub
         }
     
         @Override
