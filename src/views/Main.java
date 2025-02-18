@@ -1,6 +1,7 @@
 package views;
 
 import controller.EmergencySystem;
+import java.util.List;
 import java.util.Scanner;
 import model.Emergency;
 import model.factory.FactoryEmergency;
@@ -33,13 +34,28 @@ public class Main {
 
             switch (option) {
 
-                case 1 -> registerEmergencyFromMenu(emergencySystem, sc);
-                case 2 -> emergencySystem.showResourcesStatus();
-                case 5 -> menu = false;
-
-
+                case 1 :
+                    registerEmergencyFromMenu(emergencySystem, sc);
+                    break;
+                case 2 :
+                    emergencySystem.showResourcesStatus();
+                    break;
+                case 3 :
+                    attendEmergencyFromMenu(emergencySystem, sc);
+                    break;
+                case 4 :
+                    emergencySystem.showStatistics();
+                    break;
+                case 5 : 
+                    emergencySystem.endDay();
+                    menu = false;
+                    break;
+                default:
+                    System.out.println("Opcion no valida.");              
             }
         }
+
+        sc.close();
 
     }
 
@@ -74,8 +90,26 @@ public class Main {
         }
 
         System.out.println("Ingresa la ubicación de estas siguientes opciones ");
-        System.out.println("Zona-Norte,Zona-Sur, Zona-Centro, Zona-Oriente, Zona-Occidente");
-        String ubication = sc.nextLine();
+        /* System.out.println("Zona-Norte,Zona-Sur, Zona-Centro, Zona-Oriente, Zona-Occidente"); */
+        System.out.println("1. Zona-Norte");
+        System.out.println("2. Zona-Sur");
+        System.out.println("3. Zona-Centro");
+        System.out.println("4. Zona-Oriente");        
+        System.out.println("5. Zona-Occidente");
+
+        String ubication = null;
+
+        switch(Integer.parseInt(sc.nextLine())){
+
+            case 1 -> ubication = "Zona-Norte";
+            case 2 -> ubication = "Zona-Sur";
+            case 3 -> ubication = "Zona-Centro";
+            case 4 -> ubication = "Zona-Oriente";
+            case 5 -> ubication = "Zona-Occidente";
+            default -> ubication = "Zona-Norte";
+        }
+
+        
 
         System.out.println("Ingresa la gravedad de estas siguientes opciones ");
         System.out.println("1. Baja");
@@ -106,6 +140,36 @@ public class Main {
 
         system.addEmergency(emergency);
         System.out.println("La emergencia ha sido registrada con exito: " + emergency);
+
+    }
+
+    private static void attendEmergencyFromMenu(EmergencySystem system, Scanner sc){
+
+        List<Emergency> pending = system.getEmergencies();
+
+        if(pending.isEmpty()){
+            System.out.println("No hay emergencias pendientes.");
+            return;
+        }
+
+        System.out.println("\n--- ATENDER UNA EMERGENCIA ---");
+
+        for(int i = 0; i < pending.size(); i++){
+            System.out.println((i+1) + ". " + pending.get(i).getDescription());
+        }
+
+        System.out.println("Selecciona la emergencia a atender: ");
+        int option = Integer.parseInt(sc.nextLine()) - 1;
+        if(option < 0 || option >= pending.size()){
+            System.out.println("Opcion no valida.");
+            return;
+        }
+
+        Emergency emergency = pending.get(option);
+
+        system.assignResourcesToEmergency(emergency);
+        system.attendEmergency(emergency);
+
 
     }
 
