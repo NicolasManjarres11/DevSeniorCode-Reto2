@@ -77,8 +77,26 @@ public class Main {
         }
 
         System.out.println("Ingresa la ubicación de estas siguientes opciones ");
-        System.out.println("Zona-Norte,Zona-Sur, Zona-Centro, Zona-Oriente, Zona-Occidente");
-        String ubication = sc.nextLine();
+        /* System.out.println("Zona-Norte,Zona-Sur, Zona-Centro, Zona-Oriente, Zona-Occidente"); */
+        System.out.println("1. Zona-Norte");
+        System.out.println("2. Zona-Sur");
+        System.out.println("3. Zona-Centro");
+        System.out.println("4. Zona-Oriente");        
+        System.out.println("5. Zona-Occidente");
+
+        String ubication = null;
+
+        switch(Integer.parseInt(sc.nextLine())){
+
+            case 1 -> ubication = "Zona-Norte";
+            case 2 -> ubication = "Zona-Sur";
+            case 3 -> ubication = "Zona-Centro";
+            case 4 -> ubication = "Zona-Oriente";
+            case 5 -> ubication = "Zona-Occidente";
+            default -> ubication = "Zona-Norte";
+        }
+
+        
 
         System.out.println("Ingresa la gravedad de estas siguientes opciones ");
         System.out.println("1. Baja");
