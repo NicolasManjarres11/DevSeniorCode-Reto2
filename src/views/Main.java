@@ -34,15 +34,28 @@ public class Main {
 
             switch (option) {
 
-                case 1 -> registerEmergencyFromMenu(emergencySystem, sc);
-                case 2 -> emergencySystem.showResourcesStatus();
-                case 3 -> attendEmergencyFromMenu(emergencySystem, sc);
-                case 5 -> menu = false;
-                
-
-
+                case 1 :
+                    registerEmergencyFromMenu(emergencySystem, sc);
+                    break;
+                case 2 :
+                    emergencySystem.showResourcesStatus();
+                    break;
+                case 3 :
+                    attendEmergencyFromMenu(emergencySystem, sc);
+                    break;
+                case 4 :
+                    emergencySystem.showStatistics();
+                    break;
+                case 5 : 
+                    emergencySystem.endDay();
+                    menu = false;
+                    break;
+                default:
+                    System.out.println("Opcion no valida.");              
             }
         }
+
+        sc.close();
 
     }
 

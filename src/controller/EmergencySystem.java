@@ -137,7 +137,25 @@ public class EmergencySystem implements SubjectEmergency {
 
         try {
 
-            Thread.sleep(1000);
+            for (int i = 0; i <= 100 ;i++){
+
+                if(i == 0){
+                    System.out.println("Iniciando atencion de emergencia: "+ emergency.getDescription());
+                } else if(i == 50){
+                    System.out.println("50% de atención de emergencia");
+                } else if(i == 100){
+                    System.out.println("Emergencia atendida");
+                }
+
+                System.out.println("La emergencia se ha atendido en un "+i+"%");
+                System.out.println();
+
+
+                Thread.sleep(emergency.getResponseTime() * 10);
+
+            }
+
+            
             
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -181,6 +199,7 @@ public class EmergencySystem implements SubjectEmergency {
                 System.out.println("Guardando registro del día (simulado)...");
         // Lógica para guardarlo en BD o archivo
         System.out.println("Sistema preparado para siguiente ciclo.");
+        
     }
 
     public void setStrategyPriority(StrategyPriority newStrategy) {
