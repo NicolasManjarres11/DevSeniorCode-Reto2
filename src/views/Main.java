@@ -38,6 +38,7 @@ public class Main {
                 case 2 -> emergencySystem.showResourcesStatus();
                 case 3 -> attendEmergencyFromMenu(emergencySystem, sc);
                 case 5 -> menu = false;
+                
 
 
             }

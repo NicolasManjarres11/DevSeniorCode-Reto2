@@ -12,7 +12,7 @@ public class Ambulance extends EmergencyService{
     public void attendEmergency(Emergency emergency) {
         
         System.out.println("Ambulancia en camino");
-        System.out.println("[Ambulancia "+getId()+" ]" + emergency.getDescription());
+        System.out.println("[Ambulancia "+getId()+" ]" + " "+emergency.getDescription());
 
         assignStaff(1);
         assignFuel(30);

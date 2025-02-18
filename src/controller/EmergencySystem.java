@@ -147,6 +147,8 @@ public class EmergencySystem implements SubjectEmergency {
 
         System.out.println("Emergencia atendida: "+emergency.getDescription());
 
+        emergency.setStatus(true);
+
         emergenciesAttend += 1;
         totalAttentionTime += emergency.getResponseTime();
 
