@@ -1,6 +1,7 @@
 package views;
 
 import controller.EmergencySystem;
+import java.util.List;
 import java.util.Scanner;
 import model.Emergency;
 import model.factory.FactoryEmergency;
@@ -35,6 +36,7 @@ public class Main {
 
                 case 1 -> registerEmergencyFromMenu(emergencySystem, sc);
                 case 2 -> emergencySystem.showResourcesStatus();
+                case 3 -> attendEmergencyFromMenu(emergencySystem, sc);
                 case 5 -> menu = false;
 
 
@@ -106,6 +108,36 @@ public class Main {
 
         system.addEmergency(emergency);
         System.out.println("La emergencia ha sido registrada con exito: " + emergency);
+
+    }
+
+    private static void attendEmergencyFromMenu(EmergencySystem system, Scanner sc){
+
+        List<Emergency> pending = system.getEmergencies();
+
+        if(pending.isEmpty()){
+            System.out.println("No hay emergencias pendientes.");
+            return;
+        }
+
+        System.out.println("\n--- ATENDER UNA EMERGENCIA ---");
+
+        for(int i = 0; i < pending.size(); i++){
+            System.out.println((i+1) + ". " + pending.get(i).getDescription());
+        }
+
+        System.out.println("Selecciona la emergencia a atender: ");
+        int option = Integer.parseInt(sc.nextLine()) - 1;
+        if(option < 0 || option >= pending.size()){
+            System.out.println("Opcion no valida.");
+            return;
+        }
+
+        Emergency emergency = pending.get(option);
+
+        system.assignResourcesToEmergency(emergency);
+        system.attendEmergency(emergency);
+
 
     }
 
