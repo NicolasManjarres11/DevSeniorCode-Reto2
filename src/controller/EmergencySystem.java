@@ -1,8 +1,5 @@
 package controller;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +28,8 @@ public class EmergencySystem implements SubjectEmergency {
     private int emergenciesAttend;
     private long totalAttentionTime;
 
-    private static final String file ="src\\model\\emergencies.txt";
+    
+    private Database database = new Database();
 
     private EmergencySystem() {
 
@@ -88,7 +86,7 @@ public class EmergencySystem implements SubjectEmergency {
 
     public void addEmergency(Emergency emergency) {
         listEmergency.add(emergency);
-        saveEmergencies(listEmergency);
+        database.saveEmergencies(listEmergency);
         notifyObservers(emergency);
     }
 
@@ -200,26 +198,6 @@ public class EmergencySystem implements SubjectEmergency {
         System.out.println("Emergencias no atendidas: "+noAttend);
     }
 
-    public static void saveEmergencies(List<Emergency> emergencies) {
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))){
-
-            for (Emergency e : emergencies){
-                writer.write(e.getType()+","
-                +e.getLocation()+","
-                +e.getGravity()+","
-                +e.getResponseTime()+","
-                +e.isStatus()+","
-                +e.getInitialAttentionTime()+","
-                +e.getFinalAttentionTime());
-                writer.newLine();
-            }
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
-    }
-
 
 
     public void endDay() {
@@ -235,5 +213,11 @@ public class EmergencySystem implements SubjectEmergency {
     public void setStrategyPriority(StrategyPriority newStrategy) {
         this.strategyPriority = newStrategy;
     }
+
+    public List<Emergency> getListEmergency() {
+        return listEmergency;
+    }
+
+    
 
 }
