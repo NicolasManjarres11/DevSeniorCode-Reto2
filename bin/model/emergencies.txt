@@ -1,0 +1,1 @@
+Accidente,Zona-Norte,LOW,234,false,0,0
