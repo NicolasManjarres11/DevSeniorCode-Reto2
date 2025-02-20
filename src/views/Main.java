@@ -79,7 +79,9 @@ public class Main {
     private static void registerEmergencyFromMenu(EmergencySystem system, Scanner sc){
 
         System.out.println("\n--- REGISTRAR EMERGENCIA ---");
-        System.out.println("1. Accidente");
+        System.out.println();
+        System.out.println("Selecciona el tipo de emergencia a reportar: ");
+        System.out.println("\n1. Accidente");
         System.out.println("2. Robo");
         System.out.println("3. Incendio");
         System.out.print("Selecciona el tipo de emergencia: ");
@@ -94,8 +96,8 @@ public class Main {
 
         }
 
-        System.out.println("Ingresa la ubicación de estas siguientes opciones ");
-        System.out.println("1. Zona-Norte");
+        System.out.println("\nIngresa la ubicación donde se presento la emergencia: ");
+        System.out.println("\n1. Zona-Norte");
         System.out.println("2. Zona-Sur");
         System.out.println("3. Zona-Centro");
         System.out.println("4. Zona-Oriente");        
@@ -115,8 +117,8 @@ public class Main {
 
         
 
-        System.out.println("Ingresa la gravedad de estas siguientes opciones ");
-        System.out.println("1. Baja");
+        System.out.println("\nIngresa la gravedad de estas siguientes opciones ");
+        System.out.println("\n1. Baja");
         System.out.println("2. Media");
         System.out.println("3. Alta");
 
@@ -131,7 +133,7 @@ public class Main {
 
         }
 
-        System.out.println("Ingresa el tiempo estimado de atención en minutos");
+        System.out.println("\nIngresa el tiempo estimado de atención en minutos");
 
         int responseTime = Integer.parseInt(sc.nextLine());
 
@@ -143,7 +145,7 @@ public class Main {
         }
 
         system.addEmergency(emergency);
-        System.out.println("La emergencia ha sido registrada con exito: " + emergency);
+        System.out.println("\nLa emergencia ha sido registrada con exito: " + emergency);
 
     }
 
@@ -157,12 +159,13 @@ public class Main {
         }
 
         System.out.println("\n--- ATENDER UNA EMERGENCIA ---");
+        System.out.println();
 
         for(int i = 0; i < pending.size(); i++){
             System.out.println((i+1) + ". " + pending.get(i).getDescription());
         }
 
-        System.out.println("Selecciona la emergencia a atender: ");
+        System.out.println("\nSelecciona la emergencia a atender: ");
         int option = Integer.parseInt(sc.nextLine()) - 1;
         if(option < 0 || option >= pending.size()){
             System.out.println("Opcion no valida.");
