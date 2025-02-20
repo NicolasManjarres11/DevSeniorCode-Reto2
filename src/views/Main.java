@@ -1,5 +1,6 @@
 package views;
 
+import controller.Database;
 import controller.EmergencySystem;
 import java.util.List;
 import java.util.Scanner;
@@ -13,8 +14,12 @@ import utils.TypeEmergency;
 
 public class Main {
     public static void main(String[] args) throws Exception {
+
+
+        Database database = new Database();
         
         EmergencySystem emergencySystem = EmergencySystem.getInstance();
+        emergencySystem.loadEmergenciesFromFile();
 
         initializeResources(emergencySystem);
 
@@ -90,7 +95,6 @@ public class Main {
         }
 
         System.out.println("Ingresa la ubicación de estas siguientes opciones ");
-        /* System.out.println("Zona-Norte,Zona-Sur, Zona-Centro, Zona-Oriente, Zona-Occidente"); */
         System.out.println("1. Zona-Norte");
         System.out.println("2. Zona-Sur");
         System.out.println("3. Zona-Centro");
@@ -169,6 +173,7 @@ public class Main {
 
         system.assignResourcesToEmergency(emergency);
         system.attendEmergency(emergency);
+        
 
 
     }

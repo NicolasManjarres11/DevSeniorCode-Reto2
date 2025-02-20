@@ -111,6 +111,7 @@ public abstract class Emergency {
         return String.format("%s en %s con gravedad %s ",type,location, gravity);
     }
 
+    @Override
     public String toString(){
 
         return getDescription() + "Tiempo estimado :" + responseTime + " minutos";

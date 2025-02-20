@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +29,9 @@ public class EmergencySystem implements SubjectEmergency {
     private int emergenciesAttend;
     private long totalAttentionTime;
 
+    
+    private Database database = new Database();
+
     private EmergencySystem() {
 
         strategyPriority = new StrategyGravityPriority();
@@ -36,16 +40,23 @@ public class EmergencySystem implements SubjectEmergency {
         observers = new ArrayList<>();
         emergenciesAttend = 0;
         totalAttentionTime = 0;
+        
 
     }
 
-    //Se instancia una vez el sistema de emergencias
+    //Se instancia una vez el sistema de emergencias //Singleton
     public static EmergencySystem getInstance() {
         if (instance == null) {
             instance = new EmergencySystem();
         }
 
+        
+
         return instance;
+    }
+
+    public void loadEmergenciesFromFile() throws IOException{
+        listEmergency = database.loadEmergencies();
     }
 
     @Override
@@ -83,10 +94,12 @@ public class EmergencySystem implements SubjectEmergency {
 
     public void addEmergency(Emergency emergency) {
         listEmergency.add(emergency);
+        database.saveEmergencies(listEmergency);
         notifyObservers(emergency);
     }
 
     public List<Emergency> getEmergencies() {
+
         return listEmergency.stream().filter(e -> !e.isStatus()).collect(Collectors.toList());
     }
 
@@ -156,6 +169,8 @@ public class EmergencySystem implements SubjectEmergency {
             }
 
             
+
+            
             
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -169,6 +184,7 @@ public class EmergencySystem implements SubjectEmergency {
 
         emergenciesAttend += 1;
         totalAttentionTime += emergency.getResponseTime();
+        database.saveEmergencies(getEmergencies());
 
     }
 
@@ -194,10 +210,12 @@ public class EmergencySystem implements SubjectEmergency {
         System.out.println("Emergencias no atendidas: "+noAttend);
     }
 
+
+
     public void endDay() {
         showStatistics();
-                System.out.println("Guardando registro del día (simulado)...");
-        // Lógica para guardarlo en BD o archivo
+        System.out.println("Guardando registro del día (simulado)...");
+        database.saveEmergencies(getEmergencies());
         System.out.println("Sistema preparado para siguiente ciclo.");
         
     }
@@ -205,5 +223,11 @@ public class EmergencySystem implements SubjectEmergency {
     public void setStrategyPriority(StrategyPriority newStrategy) {
         this.strategyPriority = newStrategy;
     }
+
+    public List<Emergency> getListEmergency() {
+        return listEmergency;
+    }
+
+    
 
 }

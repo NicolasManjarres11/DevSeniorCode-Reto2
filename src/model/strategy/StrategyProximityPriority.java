@@ -9,20 +9,14 @@ public class StrategyProximityPriority implements StrategyPriority{
 
         public int calculateDistance(String ubication){
 
-            switch (ubication.toLowerCase()) {
-                case "zona-norte":
-                    return 8;
-                case "zona-sur":
-                    return 10;
-                case "zona-centro":
-                    return 2;
-                case "zona-oriente":
-                    return 5;
-                case "zona-occiendente":
-                    return 6;
-                default:
-                    return 10;
-            }
+            return switch (ubication.toLowerCase()) {
+                case "zona-norte" -> 8;
+                case "zona-sur" -> 10;
+                case "zona-centro" -> 2;
+                case "zona-oriente" -> 5;
+                case "zona-occidente" -> 6;
+                default -> 10;
+            };
 
         }
 
