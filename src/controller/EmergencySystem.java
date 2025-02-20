@@ -214,8 +214,14 @@ public class EmergencySystem implements SubjectEmergency {
 
     public void endDay() {
         showStatistics();
-        System.out.println("Guardando registro del día (simulado)...");
-        database.saveEmergencies(getEmergencies());
+        try {
+            System.out.println("\nGuardando registro del día ...");
+            database.saveEmergencies(getEmergencies());
+            Thread.sleep(3000);
+            
+        } catch (InterruptedException e) {
+        }
+        
         System.out.println("Sistema preparado para siguiente ciclo.");
         
     }

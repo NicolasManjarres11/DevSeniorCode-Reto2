@@ -84,7 +84,7 @@ public class Main {
         System.out.println("\n1. Accidente");
         System.out.println("2. Robo");
         System.out.println("3. Incendio");
-        System.out.print("Selecciona el tipo de emergencia: ");
+        System.out.print("\nIngresa una opcion: ");
         TypeEmergency type = null;
 
         switch(Integer.parseInt(sc.nextLine())){
@@ -102,6 +102,7 @@ public class Main {
         System.out.println("3. Zona-Centro");
         System.out.println("4. Zona-Oriente");        
         System.out.println("5. Zona-Occidente");
+        System.out.print("\nIngresa una opcion: ");
 
         String ubication = null;
 
@@ -121,6 +122,7 @@ public class Main {
         System.out.println("\n1. Baja");
         System.out.println("2. Media");
         System.out.println("3. Alta");
+        System.out.print("\nIngresa una opcion: ");
 
         Gravity gravity = null;
 
@@ -133,7 +135,7 @@ public class Main {
 
         }
 
-        System.out.println("\nIngresa el tiempo estimado de atención en minutos");
+        System.out.print("\nIngresa el tiempo estimado de atención en minutos: ");
 
         int responseTime = Integer.parseInt(sc.nextLine());
 
