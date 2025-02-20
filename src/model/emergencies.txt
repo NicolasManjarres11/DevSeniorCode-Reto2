@@ -1,1 +1,1 @@
-Incendio,Zona-Norte,HIGH,17,false,0,0
+Incendio,Zona-Sur,LOW,2,false,0,0
