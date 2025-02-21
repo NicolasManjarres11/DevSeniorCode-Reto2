@@ -229,7 +229,7 @@ public class Main {
 
         Emergency emergency = pending.get(option);
 
-        system.assignResourcesToEmergency(emergency);
+        /* system.assignResourcesToEmergency(emergency); */
         system.attendEmergency(emergency);
 
     }

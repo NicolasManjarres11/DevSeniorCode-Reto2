@@ -146,18 +146,18 @@ public class EmergencySystem implements SubjectEmergency {
             return;
         }
 
-        emergency.startAttention();
+        emergency.startAttention(); //Inicia el contador en lo que se demora atender una emergencia
 
         try {
 
             for (int i = 0; i <= 100 ;i++){
 
-                if(i == 0){
-                    System.out.println("Iniciando atencion de emergencia: "+ emergency.getDescription());
-                } else if(i == 50){
-                    System.out.println("50% de atención de emergencia");
-                } else if(i == 100){
-                    System.out.println("Emergencia atendida");
+                switch (i) {
+                    case 0 -> System.out.println("Iniciando atencion de emergencia: "+ emergency.getDescription());
+                    case 50 -> System.out.println("50% de atención de emergencia");
+                    case 100 -> System.out.println("Emergencia atendida");
+                    default -> {
+                    }
                 }
 
                 System.out.println("La emergencia se ha atendido en un "+i+"%");
@@ -176,7 +176,7 @@ public class EmergencySystem implements SubjectEmergency {
             Thread.currentThread().interrupt();
         }
 
-        emergency.endAttention();
+        emergency.endAttention(); //Finaliza el contador a lo que se termina de gestionar una emergencia
 
         System.out.println("Emergencia atendida: "+emergency.getDescription());
 
