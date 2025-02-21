@@ -108,63 +108,100 @@ public class Main {
 
         } while (typeOption != 1 && typeOption != 2 && typeOption != 3);
 
-        System.out.println("\nIngresa la ubicación donde se presento la emergencia: ");
-        System.out.println("\n1. Zona-Norte");
-        System.out.println("2. Zona-Sur");
-        System.out.println("3. Zona-Centro");
-        System.out.println("4. Zona-Oriente");
-        System.out.println("5. Zona-Occidente");
-        System.out.print("\nIngresa una opcion: ");
-
         String ubication = null;
+        int ubicationOption;
 
-        switch (Integer.parseInt(sc.nextLine())) {
+        System.out.println("\nIngresa la ubicación donde se presento la emergencia: ");
 
-            case 1 ->
-                ubication = "Zona-Norte";
-            case 2 ->
-                ubication = "Zona-Sur";
-            case 3 ->
-                ubication = "Zona-Centro";
-            case 4 ->
-                ubication = "Zona-Oriente";
-            case 5 ->
-                ubication = "Zona-Occidente";
-            default ->
-                ubication = "Zona-Norte";
-        }
+        do {
 
-        System.out.println("\nIngresa la gravedad de estas siguientes opciones ");
-        System.out.println("\n1. Baja");
-        System.out.println("2. Media");
-        System.out.println("3. Alta");
-        System.out.print("\nIngresa una opcion: ");
+            System.out.println("\n1. Zona-Norte");
+            System.out.println("2. Zona-Sur");
+            System.out.println("3. Zona-Centro");
+            System.out.println("4. Zona-Oriente");
+            System.out.println("5. Zona-Occidente");
+            System.out.print("\nIngresa una opcion: ");
+            ubicationOption = Integer.parseInt(sc.nextLine());
+
+            switch (ubicationOption) {
+
+                case 1 ->
+                    ubication = "Zona-Norte";
+                case 2 ->
+                    ubication = "Zona-Sur";
+                case 3 ->
+                    ubication = "Zona-Centro";
+                case 4 ->
+                    ubication = "Zona-Oriente";
+                case 5 ->
+                    ubication = "Zona-Occidente";
+                default ->
+                    System.err.println("Opcion no valida. Intentelo de nuevo.");
+            }
+
+        } while (!(ubicationOption >= 1 && ubicationOption <= 5));
 
         Gravity gravity = null;
+        int gravityOption;
 
-        switch (Integer.parseInt(sc.nextLine())) {
+        do {
 
-            case 1 ->
-                gravity = Gravity.LOW;
-            case 2 ->
-                gravity = Gravity.MEDIUM;
-            case 3 ->
-                gravity = Gravity.HIGH;
-            default ->
-                gravity = Gravity.LOW;
+            System.out.println("\nIngresa la gravedad de estas siguientes opciones ");
+            System.out.println("\n1. Baja");
+            System.out.println("2. Media");
+            System.out.println("3. Alta");
+            System.out.print("\nIngresa una opcion: ");
+            gravityOption = Integer.parseInt(sc.nextLine());
 
-        }
+            switch (gravityOption) {
 
-        System.out.print("\nIngresa el tiempo estimado de atención en minutos: ");
+                case 1 ->
+                    gravity = Gravity.LOW;
+                case 2 ->
+                    gravity = Gravity.MEDIUM;
+                case 3 ->
+                    gravity = Gravity.HIGH;
+                default ->
+                    System.err.println("Opcion no valida. Intentelo de nuevo.");
 
-        int responseTime = Integer.parseInt(sc.nextLine());
+            }
+
+        } while (!(gravityOption >= 1 && gravityOption <= 3));
+
+        int responseTime;
+
+        do { 
+            System.out.print("\nIngresa el tiempo estimado de atención en minutos: ");
+
+            responseTime = Integer.parseInt(sc.nextLine());
+            if (responseTime <= 0) {
+                System.err.println("El tiempo estimado no puede ser negativo.");
+            }
+
+        } while (responseTime <= 0);
+
+        
+
 
         Emergency emergency = FactoryEmergency.createEmergency(type, ubication, gravity, responseTime);
 
         if (emergency == null) {
             System.out.println("Error al crear la emergencia, intenta de nuevo.");
             return;
+        } 
+
+        System.out.println("¿Desea registrar la siguiente emergencia?");
+        System.out.println(emergency);
+        System.out.println("\n1. Si");
+        System.out.println("2. No");
+        System.out.println("Ingresa una opcion: ");
+        int option = Integer.parseInt(sc.nextLine());
+
+        if(option != 1) {
+            System.out.println("La emergencia no ha sido registrada.");    
+            return;
         }
+
 
         system.addEmergency(emergency);
         System.out.println("\nLa emergencia ha sido registrada con exito: " + emergency);
