@@ -170,7 +170,7 @@ public class Main {
 
         int responseTime;
 
-        do { 
+        do {
             System.out.print("\nIngresa el tiempo estimado de atención en minutos: ");
 
             responseTime = Integer.parseInt(sc.nextLine());
@@ -180,15 +180,12 @@ public class Main {
 
         } while (responseTime <= 0);
 
-        
-
-
         Emergency emergency = FactoryEmergency.createEmergency(type, ubication, gravity, responseTime);
 
         if (emergency == null) {
             System.out.println("Error al crear la emergencia, intenta de nuevo.");
             return;
-        } 
+        }
 
         System.out.println("¿Desea registrar la siguiente emergencia?");
         System.out.println(emergency);
@@ -197,11 +194,10 @@ public class Main {
         System.out.println("Ingresa una opcion: ");
         int option = Integer.parseInt(sc.nextLine());
 
-        if(option != 1) {
-            System.out.println("La emergencia no ha sido registrada.");    
+        if (option != 1) {
+            System.out.println("La emergencia no ha sido registrada.");
             return;
         }
-
 
         system.addEmergency(emergency);
         System.out.println("\nLa emergencia ha sido registrada con exito: " + emergency);
