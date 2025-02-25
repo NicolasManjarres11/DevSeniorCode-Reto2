@@ -29,7 +29,6 @@ public class EmergencySystem implements SubjectEmergency {
     private int emergenciesAttend;
     private long totalAttentionTime;
 
-    
     private Database database = new Database();
 
     private EmergencySystem() {
@@ -40,9 +39,16 @@ public class EmergencySystem implements SubjectEmergency {
         observers = new ArrayList<>();
         emergenciesAttend = 0;
         totalAttentionTime = 0;
-        
 
     }
+
+    
+
+    public List<IEmergencyService> getListResources() {
+        return listResources;
+    }
+
+
 
     //Se instancia una vez el sistema de emergencias //Singleton
     public static EmergencySystem getInstance() {
@@ -50,12 +56,10 @@ public class EmergencySystem implements SubjectEmergency {
             instance = new EmergencySystem();
         }
 
-        
-
         return instance;
     }
 
-    public void loadEmergenciesFromFile() throws IOException{
+    public void loadEmergenciesFromFile() throws IOException {
         listEmergency = database.loadEmergencies();
     }
 
@@ -87,6 +91,8 @@ public class EmergencySystem implements SubjectEmergency {
         }
     }
 
+    
+
     //Lambda
     public List<IEmergencyService> filterAvailableResources() {
         return listResources.stream().filter(r -> r.isStatus()).collect(Collectors.toList());
@@ -103,82 +109,77 @@ public class EmergencySystem implements SubjectEmergency {
         return listEmergency.stream().filter(e -> !e.isStatus()).collect(Collectors.toList());
     }
 
-    public void assignResourcesToEmergency(Emergency emergency) {
+    //Obtenet emergencias segun prioridad
 
+    public List<Emergency> getPendingEmergenciesSorted() {
+        return listEmergency.stream()
+                .filter(e -> !e.isStatus())
+                .sorted((e1, e2) -> Integer.compare(
+                    strategyPriority.calculatePriority(e2),  // Emergencia con mayor prioridad primero
+                    strategyPriority.calculatePriority(e1)))
+                .collect(Collectors.toList());
+    }
+
+    public IEmergencyService assignResourcesToEmergency(Emergency emergency) {
         List<IEmergencyService> available = filterAvailableResources();
-
         if (available.isEmpty()) {
             System.out.println("No hay recursos disponibles para atender la emergencia");
-            return;
+            return null;
         }
         System.out.println("\n--- ASIGNANDO RECURSOS ... ---");
-
-        if (emergency instanceof Fire) {
-            for (IEmergencyService r : available) {
-                if (r instanceof Firefighters) {
-                    r.attendEmergency(emergency);
-                    break;
-                }
+    
+        for (IEmergencyService r : available) {
+            if ((emergency instanceof Fire && r instanceof Firefighters) ||
+                (emergency instanceof Accident && r instanceof Ambulance) ||
+                (emergency instanceof Robbery && r instanceof Police)) {
+                
+                r.attendEmergency(emergency);
+                return r;
             }
-        } else if (emergency instanceof Accident) {
-            for (IEmergencyService r : available) {
-                if (r instanceof Ambulance) {
-                    r.attendEmergency(emergency);
-                    break;
-                }
-            }
-        } else if (emergency instanceof Robbery) {
-            for (IEmergencyService r : available) {
-                if (r instanceof Police) {
-                    r.attendEmergency(emergency);
-                    break;
-                }
-            }
-
         }
-
+        return null;
     }
 
     public void attendEmergency(Emergency emergency) {
 
-        if(emergency.isStatus()){
+        if (emergency.isStatus()) {
             System.out.println("Esta emergencia ya ha sido atendida");
             return;
         }
 
         emergency.startAttention(); //Inicia el contador en lo que se demora atender una emergencia
 
+        IEmergencyService assignedResource = assignResourcesToEmergency(emergency);
+
         try {
 
-            for (int i = 0; i <= 100 ;i++){
+            for (int i = 0; i <= 100; i++) {
 
                 switch (i) {
-                    case 0 -> System.out.println("Iniciando atencion de emergencia: "+ emergency.getDescription());
-                    case 50 -> System.out.println("50% de atención de emergencia");
-                    case 100 -> System.out.println("Emergencia atendida");
+                    case 0 ->
+                        System.out.println("Iniciando atencion de emergencia: " + emergency.getDescription());
+                    case 50 ->
+                        System.out.println("50% de atención de emergencia");
+                    case 100 ->
+                        System.out.println("Emergencia atendida");
                     default -> {
                     }
                 }
 
-                System.out.println("La emergencia se ha atendido en un "+i+"%");
+                System.out.println("La emergencia se ha atendido en un " + i + "%");
                 System.out.println();
-
 
                 Thread.sleep(emergency.getResponseTime() * 10);
 
             }
 
-            
-
-            
-            
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
 
         emergency.endAttention(); //Finaliza el contador a lo que se termina de gestionar una emergencia
 
-        System.out.println("Emergencia atendida: "+emergency.getDescription());
+        System.out.println("Emergencia atendida: " + emergency.getDescription());
 
         emergency.setStatus(true);
 
@@ -186,31 +187,34 @@ public class EmergencySystem implements SubjectEmergency {
         totalAttentionTime += emergency.getResponseTime();
         database.saveEmergencies(getEmergencies());
 
-    }
+        //Se dejan disponibles de nuevo las personas en staff cuando finalizan la atencion de una emergencia	
 
+        if (assignedResource != null) {
+            
+            assignedResource.finishEmergency(emergency);
+        }
+
+    }
 
     public void showStatistics() {
 
         System.out.println("\n--- ESTADISTICAS DEL DIA ---");
-        System.out.println("Emergencias atendidas: "+emergenciesAttend);
+        System.out.println("Emergencias atendidas: " + emergenciesAttend);
 
         long mediaMs = 0;
 
-        if(emergenciesAttend > 0){
+        if (emergenciesAttend > 0) {
             mediaMs = totalAttentionTime / emergenciesAttend;
         }
 
         double mediaSeg = mediaMs / 1000.0;
 
-        System.out.println("Tiempo promedio de atencion: "+mediaSeg+" segundos");
-
+        System.out.println("Tiempo promedio de atencion: " + mediaSeg + " segundos");
 
         long noAttend = listEmergency.stream().filter(e -> !e.isStatus()).count();
 
-        System.out.println("Emergencias no atendidas: "+noAttend);
+        System.out.println("Emergencias no atendidas: " + noAttend);
     }
-
-
 
     public void endDay() {
         showStatistics();
@@ -218,12 +222,12 @@ public class EmergencySystem implements SubjectEmergency {
             System.out.println("\nGuardando registro del día ...");
             database.saveEmergencies(getEmergencies());
             Thread.sleep(3000);
-            
+
         } catch (InterruptedException e) {
         }
-        
+
         System.out.println("Sistema preparado para siguiente ciclo.");
-        
+
     }
 
     public void setStrategyPriority(StrategyPriority newStrategy) {
@@ -233,7 +237,5 @@ public class EmergencySystem implements SubjectEmergency {
     public List<Emergency> getListEmergency() {
         return listEmergency;
     }
-
-    
 
 }
