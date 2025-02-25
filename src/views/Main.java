@@ -27,8 +27,6 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         boolean menu = true;
 
-        
-
         while (menu) {
             System.out.println("\n ----   SISTEMA DE GESTION DE EMERGENCIAS   ----");
             System.out.println("1. Registrar emergencia");
@@ -85,65 +83,96 @@ public class Main {
     }
 
     //Metodo para transferir recursos de un servicio a otro
-
     private static void transferResources(EmergencySystem emergencySystem, Scanner sc) {
 
         List<IEmergencyService> listResources = emergencySystem.getListResources();
-        
-        if(listResources.isEmpty()){
+
+        if (listResources.isEmpty()) {
             System.out.println("No hay recursos disponibles para transferir.");
             return;
         }
 
         System.out.println("\n--- TRANSFERIR RECURSOS ---");
 
-        for(int i = 0; i<listResources.size(); i++){
-            System.out.println((i+1)+". "+listResources.get(i).toString());
+        for (int i = 0; i < listResources.size(); i++) {
+            System.out.println((i + 1) + ". " + listResources.get(i).toString());
         }
 
         System.out.println("\nSelecciona el recurso origen: ");
-        int origin = Integer.parseInt(sc.nextLine())-1;
+        int origin = Integer.parseInt(sc.nextLine()) - 1;
 
-        if(origin<0 || origin>=listResources.size()){
+        if (origin < 0 || origin >= listResources.size()) {
 
             System.out.println("Opcion no valida.");
             return;
         }
 
         System.out.println("\nSelecciona el recurso destino: ");
-        int destination = Integer.parseInt(sc.nextLine())-1;
+        int destination = Integer.parseInt(sc.nextLine()) - 1;
 
-        if(destination<0 || destination>=listResources.size()){
+        if (destination < 0 || destination >= listResources.size()) {
 
             System.out.println("Opcion no valida.");
             return;
         }
 
-        
+        System.out.println("\n¿Que recurso deseas transferir?");
+        System.out.println("1. Personal");
+        System.out.println("2. Combustible");
+        int option = Integer.parseInt(sc.nextLine());
 
-        System.out.println("\nIngresa la cantidad de personal a transferir: ");
-        int personal = Integer.parseInt(sc.nextLine());
-
-        if(personal <=0){
-            System.out.println("La cantidad de personal a transferir debe ser mayor a 0.");
+        if (option != 1 && option != 2) {
+            System.out.println("Opcion no valida.");
             return;
+        } else if (option == 1) {
+
+            System.out.println("\nIngresa la cantidad de personal a transferir: ");
+            int personal = Integer.parseInt(sc.nextLine());
+
+            if (personal <= 0) {
+                System.out.println("La cantidad de personal a transferir debe ser mayor a 0.");
+                return;
+            }
+
+            IEmergencyService originResource = listResources.get(origin);
+            IEmergencyService destinationResource = listResources.get(destination);
+
+            if (originResource.getStaff() < personal) {
+                System.out.println("No hay suficiente personal para transferir.");
+                return;
+            }
+
+            originResource.assignStaff(personal);
+            destinationResource.releaseStaff(personal);
+
+            System.out.println("\nPersonal transferido.");
+            System.out.println("Recurso origen: " + originResource);
+            System.out.println("Recurso destino: " + destinationResource);
+
+        } else if (option == 2) {
+            System.out.println("\nIngresa la cantidad de combustible a transferir: ");
+            int fuel = Integer.parseInt(sc.nextLine());
+
+            if (fuel <= 0) {
+                System.out.println("La cantidad de personal a transferir debe ser mayor a 0.");
+                return;
+            }
+
+            IEmergencyService originResource = listResources.get(origin);
+            IEmergencyService destinationResource = listResources.get(destination);
+
+            if (originResource.getFuel() < fuel) {
+                System.out.println("No hay suficiente combustible para transferir.");
+                return;
+            }
+
+            originResource.assignFuel(fuel);
+            destinationResource.releaseFuel(fuel);
+
+            System.out.println("\nCombustible transferido.");
+            System.out.println("Recurso origen: " + originResource);
+            System.out.println("Recurso destino: " + destinationResource);
         }
-
-        IEmergencyService originResource = listResources.get(origin);
-        IEmergencyService destinationResource = listResources.get(destination);
-
-        if(originResource.getStaff() < personal){
-            System.out.println("No hay suficiente personal para transferir.");
-            return;
-        }
-
-        originResource.assignStaff(personal);
-        destinationResource.releaseStaff(personal);
-
-        System.out.println("\nPersonal transferido.");
-        System.out.println("Recurso origen: "+originResource);
-        System.out.println("Recurso destino: "+destinationResource);
-
 
     }
 
@@ -304,8 +333,6 @@ public class Main {
 
         system.assignResourcesToEmergency(emergency);
         system.attendEmergency(emergency);
-
-
 
         system.showResourcesStatus();
 
