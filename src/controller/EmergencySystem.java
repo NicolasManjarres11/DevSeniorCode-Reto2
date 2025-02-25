@@ -109,6 +109,17 @@ public class EmergencySystem implements SubjectEmergency {
         return listEmergency.stream().filter(e -> !e.isStatus()).collect(Collectors.toList());
     }
 
+    //Obtenet emergencias segun prioridad
+
+    public List<Emergency> getPendingEmergenciesSorted() {
+        return listEmergency.stream()
+                .filter(e -> !e.isStatus())
+                .sorted((e1, e2) -> Integer.compare(
+                    strategyPriority.calculatePriority(e2),  // Emergencia con mayor prioridad primero
+                    strategyPriority.calculatePriority(e1)))
+                .collect(Collectors.toList());
+    }
+
     public IEmergencyService assignResourcesToEmergency(Emergency emergency) {
         List<IEmergencyService> available = filterAvailableResources();
         if (available.isEmpty()) {

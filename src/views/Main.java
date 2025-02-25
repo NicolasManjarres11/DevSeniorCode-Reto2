@@ -53,6 +53,8 @@ public class Main {
                     }
                     break;
                 case 3:
+                    System.out.println("\n¿Quieres atender la emergencia por prioridad o por orden de llegada?");
+
                     attendEmergencyFromMenu(emergencySystem, sc);
                     break;
                 case 4:
