@@ -43,6 +43,7 @@ public class EmergencySystem implements SubjectEmergency {
     }
 
     
+    //Gettet para obtener la lista de recursos disponibles
 
     public List<IEmergencyService> getListResources() {
         return listResources;
@@ -59,19 +60,26 @@ public class EmergencySystem implements SubjectEmergency {
         return instance;
     }
 
+    //Carga las emergencias registradas y no atendidas de la base de datos
+
     public void loadEmergenciesFromFile() throws IOException {
         listEmergency = database.loadEmergencies();
     }
 
+    //Agregar subscripciones
     @Override
     public void addObserver(ObserverEmergency observerEmergency) {
         observers.add(observerEmergency);
     }
 
+    //Quitar subscripciones
+
     @Override
     public void removeObserver(ObserverEmergency observerEmergency) {
         observers.remove(observerEmergency);
     }
+
+    //Notificar a subscripciones
 
     @Override
     public void notifyObservers(Emergency emergency) {
@@ -80,9 +88,13 @@ public class EmergencySystem implements SubjectEmergency {
         }
     }
 
+    //Registro de recursos
+
     public void registerResource(IEmergencyService resource) {
         listResources.add(resource);
     }
+
+    //Mostrar recursos
 
     public void showResourcesStatus() {
         System.out.println("\n--- ESTADO ACTUAL DE LOS RECURSOS ---");
@@ -98,18 +110,22 @@ public class EmergencySystem implements SubjectEmergency {
         return listResources.stream().filter(r -> r.isStatus()).collect(Collectors.toList());
     }
 
+    //Agrega Emergencias a una lista de emergencias
+
     public void addEmergency(Emergency emergency) {
         listEmergency.add(emergency);
-        database.saveEmergencies(listEmergency);
+        database.saveEmergencies(listEmergency); //Guarda las emergencias en la "base de datos"
         notifyObservers(emergency);
     }
+
+    //Obtiene emergencias no atendidas
 
     public List<Emergency> getEmergencies() {
 
         return listEmergency.stream().filter(e -> !e.isStatus()).collect(Collectors.toList());
     }
 
-    //Obtenet emergencias segun prioridad
+    //Obtenet emergencias no atendidas segun prioridad
 
     public List<Emergency> getPendingEmergenciesSorted() {
         return listEmergency.stream()
@@ -119,6 +135,8 @@ public class EmergencySystem implements SubjectEmergency {
                     strategyPriority.calculatePriority(e1)))
                 .collect(Collectors.toList());
     }
+
+    //Asignacion de recursos a la emergencia
 
     public IEmergencyService assignResourcesToEmergency(Emergency emergency) {
         List<IEmergencyService> available = filterAvailableResources();
@@ -134,7 +152,7 @@ public class EmergencySystem implements SubjectEmergency {
                 (emergency instanceof Robbery && r instanceof Police)) {
                 
                 r.attendEmergency(emergency);
-                return r;
+                return r; 
             }
         }
         return null;
@@ -196,6 +214,8 @@ public class EmergencySystem implements SubjectEmergency {
 
     }
 
+    //Metodo para mostrar estadisticas del dia
+
     public void showStatistics() {
 
         System.out.println("\n--- ESTADISTICAS DEL DIA ---");
@@ -207,7 +227,7 @@ public class EmergencySystem implements SubjectEmergency {
             mediaMs = totalAttentionTime / emergenciesAttend;
         }
 
-        double mediaSeg = mediaMs / 1000.0;
+        double mediaSeg = mediaMs / 100.0;
 
         System.out.println("Tiempo promedio de atencion: " + mediaSeg + " segundos");
 
@@ -220,7 +240,7 @@ public class EmergencySystem implements SubjectEmergency {
         showStatistics();
         try {
             System.out.println("\nGuardando registro del día ...");
-            database.saveEmergencies(getEmergencies());
+            database.saveEmergencies(getEmergencies()); //Guarda las emergencias no atendidas en el dia en la base de datos
             Thread.sleep(3000);
 
         } catch (InterruptedException e) {
@@ -230,9 +250,15 @@ public class EmergencySystem implements SubjectEmergency {
 
     }
 
+    public StrategyPriority getStrategyPriority() {
+        return strategyPriority;
+    }
+
     public void setStrategyPriority(StrategyPriority newStrategy) {
         this.strategyPriority = newStrategy;
     }
+
+    //Getter para la lista de emergencias
 
     public List<Emergency> getListEmergency() {
         return listEmergency;
