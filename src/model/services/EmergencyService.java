@@ -67,10 +67,15 @@ public abstract class EmergencyService implements IEmergencyService {
     @Override
     public abstract void attendEmergency(Emergency emergency);
 
+    
+
     @Override
     public String toString() {
         return "Servicio de emergencia [Id: " + id + ", Personal disponible: " + staff + ", Combustible: " + fuel + "]";
     }
+
+    @Override
+    public void finishEmergency(Emergency emergency){}
 
     
 

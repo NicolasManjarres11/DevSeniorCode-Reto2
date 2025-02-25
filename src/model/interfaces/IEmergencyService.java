@@ -22,6 +22,8 @@ public interface IEmergencyService {
 
     void attendEmergency(Emergency emergency);
 
+    void finishEmergency(Emergency emergency);
+
 
 
 }
