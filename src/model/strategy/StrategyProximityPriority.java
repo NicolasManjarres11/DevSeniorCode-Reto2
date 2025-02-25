@@ -4,6 +4,7 @@ import model.Emergency;
 
 public class StrategyProximityPriority implements StrategyPriority{
 
+    //Clase interna
 
     private class UrbanMap {
 

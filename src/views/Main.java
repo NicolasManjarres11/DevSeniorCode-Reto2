@@ -53,8 +53,6 @@ public class Main {
                     }
                     break;
                 case 3:
-                    System.out.println("\n¿Quieres atender la emergencia por prioridad o por orden de llegada?");
-
                     attendEmergencyFromMenu(emergencySystem, sc);
                     break;
                 case 4:
@@ -311,14 +309,50 @@ public class Main {
     private static void attendEmergencyFromMenu(EmergencySystem system, Scanner sc) {
 
         List<Emergency> pending = system.getEmergencies();
+        List<Emergency> pendingByPriority = system.getPendingEmergenciesSorted();
 
-        if (pending.isEmpty()) {
+        if (pending.isEmpty() || pendingByPriority.isEmpty()) {
             System.out.println("No hay emergencias pendientes.");
             return;
         }
 
         System.out.println("\n--- ATENDER UNA EMERGENCIA ---");
         System.out.println();
+
+        System.out.println("¿Como deseas atender las emergencias?");
+        System.out.println("1. Por prioridad");
+        System.out.println("2. Por orden de llegada");
+        System.out.println("Ingresa una opcion: ");
+        int optionAttend = Integer.parseInt(sc.nextLine());
+
+        if (optionAttend <= 0 || optionAttend > 2) {
+            System.out.println("Opcion no valida.");
+            return;
+        }
+
+        if (optionAttend == 1) {
+            System.out.println("\n--- Emergencias pendientes (ordenadas por prioridad) ---");
+            for (int i = 0; i < pendingByPriority.size(); i++) {
+                Emergency e = pendingByPriority.get(i);
+                System.out.println((i + 1) + ". " + e.getDescription()
+                        + " | Prioridad: " + system.getStrategyPriority().calculatePriority(e));
+            }
+
+            System.out.println("\nSelecciona la emergencia a atender: ");
+            int option = Integer.parseInt(sc.nextLine()) - 1;
+            if (option < 0 || option >= pendingByPriority.size()) {
+                System.out.println("Opcion no valida.");
+                return;
+            }
+
+            Emergency emergency = pendingByPriority.get(option);
+
+            system.assignResourcesToEmergency(emergency);
+            system.attendEmergency(emergency);
+
+            system.showResourcesStatus();
+
+        } if (optionAttend == 2) {
 
         for (int i = 0; i < pending.size(); i++) {
             System.out.println((i + 1) + ". " + pending.get(i).getDescription());
@@ -337,6 +371,8 @@ public class Main {
         system.attendEmergency(emergency);
 
         system.showResourcesStatus();
+
+    }
 
     }
 

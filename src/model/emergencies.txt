@@ -1,5 +1,0 @@
-Accidente,Zona-Norte,LOW,1,false,0,0
-Accidente,Zona-Norte,LOW,1,false,0,0
-Accidente,Zona-Norte,LOW,1,false,0,0
-Accidente,Zona-Norte,LOW,1,false,0,0
-Accidente,Zona-Norte,LOW,1,false,0,0
